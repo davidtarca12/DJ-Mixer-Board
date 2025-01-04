@@ -1,0 +1,38 @@
+body {
+    background-color: #313338;
+}
+
+.headbar {
+    height: 5vh;
+    width: 100vw;
+    background-color: black;
+}
+
+.navbar{
+    background-color: rgb(157, 59, 59);
+}
+
+.console-container {
+    justify-content: center;
+    display: flex;
+}
+.console {
+    width: 100vw;
+    height: 60vh;
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+}
+
+.left-channel,.right-channel,.center-channel{
+    border: 2px solid rgb(40, 16, 249);
+    height:60vh;
+}
+.center-channel{
+    width:20vw;
+}
+
+.left-channel,.right-channel{
+    width: 40vw;
+    height:60vh;
+}
