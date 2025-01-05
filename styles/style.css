@@ -49,3 +49,53 @@ body {
     width: 100vw;
     height:32vh;
 }
+#upload-left{
+    padding-right:30px;
+}
+#upload-right{
+    padding-right:30px;
+}
+#left-song-name-wrapper,#right-song-name-wrapper{
+    position: absolute;
+    color: white;
+    -webkit-text-stroke: 0.2mm;
+    font-size: 120%;
+}
+
+#audio-controls-left,#audio-controls-right{
+    position: absolute;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#seekbar-right, #seekbar-left {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 300px;
+    height: 8px;
+    background: rgb(171, 4, 5);
+    border-radius: 5px;
+    
+    
+}
+
+
+#seekbar-left::-webkit-slider-thumb, #seekbar-right::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 20px;
+    background: #ffffff; 
+    border-radius: 50%; 
+    cursor: pointer;
+}
+
+#audio-controls-right #seekbar-right{
+    background: rgb(0,32,168);
+}
+
+.time-duration-container{
+    padding-top: 10px;
+}

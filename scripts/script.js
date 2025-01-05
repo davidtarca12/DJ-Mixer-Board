@@ -1,7 +1,21 @@
 let songs = [];
 let songsTable;
+let selectedSong = null;
+let audioPlayerLeft, audioPlayerRight;
+const defaultAudioPlayerSrc = (new Audio()).src;
+
+class Song{
+    constructor(file, url, name, artist){
+        this.file = file;
+        this.url = url;
+        this.name = name;
+        this.artist = artist;
+    }
+}
 
 window.onload = () => {
+    audioPlayerLeft = document.createElement('audio');
+    audioPlayerRight = document.createElement('audio');
 
     let leftCanvas = document.getElementById('left');
     let leftContext = leftCanvas.getContext('2d');
@@ -22,9 +36,27 @@ window.onload = () => {
     let leftIsPlaying = false, rightIsPlaying = false;
 
     songsTable = document.getElementById('songs-table');
+    
 
     let centerCanvas = document.getElementById('center');
     let centerContext = centerCanvas.getContext('2d');
+
+    let uploadLeft = document.getElementById('upload-left');
+    let uploadRight = document.getElementById('upload-right');
+
+    let leftSongName = document.getElementById('left-song-name');
+    let rightSongName = document.getElementById('right-song-name');
+
+
+    const seekbarLeft = document.getElementById('seekbar-left');
+    const currentTimeLeft = document.getElementById('current-time-left');
+    const durationLeft = document.getElementById('duration-left');
+
+    const seekbarRight = document.getElementById('seekbar-right');
+    const currentTimeRight = document.getElementById('current-time-right');
+    const durationRight = document.getElementById('duration-right');
+    
+    const previousRight = document.getElementById('previous-right');
 
     let leftImg = new Image();
     leftImg.src = "assets/images/channel-red.png";
@@ -36,6 +68,32 @@ window.onload = () => {
 
     btnGroups[1].style.right = (rightCanvas.width / 2 - btnGroups[0].offsetWidth / 2) + 'px';
     btnGroups[1].style.top = (rightCanvas.height / 2 - btnGroups[0].offsetHeight + targetSize) + 'px';
+
+    let leftSongNameWrapper = document.getElementById('left-song-name-wrapper');
+    let rightSongNameWrapper = document.getElementById('right-song-name-wrapper');
+
+    resizeSongName(true);
+    resizeSongName(false);
+
+    function resizeSongName(left){
+        if(left){
+            leftSongNameWrapper.style.left = (leftCanvas.width / 2 - leftSongNameWrapper.offsetWidth / 2) + 'px';
+            leftSongNameWrapper.style.top = (leftCanvas.height / 2 - leftSongNameWrapper.offsetHeight + targetSize - 50) + 'px';
+        }
+        else{
+            rightSongNameWrapper.style.right = (rightCanvas.width / 2 - rightSongNameWrapper.offsetWidth / 2) + 'px';
+            rightSongNameWrapper.style.top = (rightCanvas.height / 2 - rightSongNameWrapper.offsetHeight + targetSize - 50) + 'px';
+        }
+    }
+
+    let leftSeekBar = document.getElementById('audio-controls-left');
+    let rightSeekBar = document.getElementById('audio-controls-right');
+
+    leftSeekBar.style.left = (leftCanvas.width / 2 - leftSeekBar.offsetWidth / 2) +'px';
+    leftSeekBar.style.top = (leftCanvas.height / 2 - leftSeekBar.offsetHeight + targetSize + 55) + 'px';
+
+    rightSeekBar.style.right = (rightCanvas.width / 2 - rightSeekBar.offsetWidth / 2) + 'px';
+    rightSeekBar.style.top = (rightCanvas.height / 2 - rightSeekBar.offsetHeight + targetSize + 55) + 'px';
 
 
     //ANIMATION
@@ -56,24 +114,35 @@ window.onload = () => {
 
     playLeftBtn.onclick = () => {
         if(leftIsPlaying){
+            audioPlayerLeft.pause();
             playLeftImg.src = "assets/buttons/PlayButton.png";
 
         }
         else{
-            leftAngle = animate(leftContext, leftImg, leftAngle, leftCanvas, targetSize, true, true);
-            playLeftImg.src = "assets/buttons/StopButton.png";
+            if(audioPlayerLeft.src !== defaultAudioPlayerSrc){
+                audioPlayerLeft.play();
+                animate(leftContext, leftImg, leftAngle, leftCanvas, targetSize, true, true);
+                playLeftImg.src = "assets/buttons/StopButton.png";
+            }
         }
-        leftIsPlaying = !leftIsPlaying;
+        if(audioPlayerLeft.src !== defaultAudioPlayerSrc)
+            leftIsPlaying = !leftIsPlaying;
     }
 
     playRightBtn.onclick = () => {
-        if(rightIsPlaying)
+        if(rightIsPlaying){
+            audioPlayerRight.pause();
             playRightImg.src = "assets/buttons/PlayButton.png";
-        else{
-            rightAngle = animate(rightContext, rightImg, rightAngle, rightCanvas, targetSize, false, true);
-            playRightImg.src = "assets/buttons/StopButton.png";
         }
-        rightIsPlaying = !rightIsPlaying;
+        else{
+            if(audioPlayerRight.src !== defaultAudioPlayerSrc){
+                audioPlayerRight.play();
+                animate(rightContext, rightImg, rightAngle, rightCanvas, targetSize, false, true);
+                playRightImg.src = "assets/buttons/StopButton.png";
+            }
+        }
+        if(audioPlayerRight.src !== defaultAudioPlayerSrc)
+            rightIsPlaying = !rightIsPlaying;
     }
 
     function animate(ctx, image, angle, canvas, targetSize, left, isPlaying) {
@@ -110,8 +179,68 @@ window.onload = () => {
             requestAnimationFrame(() => animate(ctx, image, angle, canvas, targetSize, false, rightIsPlaying));
         
     }
+
+    uploadLeft.onclick = () => {
+        if (selectedSong) {
+            const objectURL = selectedSong.url;
+            audioPlayerLeft.src = objectURL;
+            leftSongName.innerHTML = selectedSong.artist + " - " + selectedSong.name;
+            resizeSongName(true);
+            if(leftIsPlaying)
+                playLeftBtn.onclick();
+        }
+    };
       
+    uploadRight.onclick = () => {
+        if (selectedSong) {
+            const objectURL = selectedSong.url;
+            audioPlayerRight.src = objectURL;
+            rightSongName.innerHTML = selectedSong.artist + " - " + selectedSong.name;
+            resizeSongName(false);
+            if(rightIsPlaying)
+                playRightBtn.onclick();
+        }
+    };
+
+    seekbarLeft.onchange = function() {seekTo(audioPlayerLeft, seekbarLeft)};
+    seekbarRight.onchange = function() {seekTo(audioPlayerRight, seekbarRight)};
+
+    setInterval(function() {seekUpdate(audioPlayerRight, seekbarRight, currentTimeRight, durationRight)}, 300);
+    setInterval(function() {seekUpdate(audioPlayerLeft, seekbarLeft, currentTimeLeft, durationLeft)}, 300);
+
+
+    previousRight.onclick = () => {
+        
+    }
 }
+
+function seekTo(audioPlayer, seekbar){
+    if(!isNaN(audioPlayer.duration))
+        audioPlayer.currentTime = audioPlayer.duration * (seekbar.value / 100);
+}
+
+function seekUpdate(audioPlayer, seekbar, currentTime, duration){
+    let seekPosition = 0;
+    if (!isNaN(audioPlayer.duration)) {
+      seekPosition = audioPlayer.currentTime * (100 / audioPlayer.duration);
+      seekbar.value = seekPosition;
+   
+      let currentMinutes = Math.floor(audioPlayer.currentTime / 60);
+      let currentSeconds = Math.floor(audioPlayer.currentTime - currentMinutes * 60);
+      let durationMinutes = Math.floor(audioPlayer.duration / 60);
+      let durationSeconds = Math.floor(audioPlayer.duration - durationMinutes * 60);
+   
+      if (currentSeconds < 10) { currentSeconds = "0" + currentSeconds; }
+      if (durationSeconds < 10) { durationSeconds = "0" + durationSeconds; }
+      if (currentMinutes < 10) { currentMinutes = "0" + currentMinutes; }
+      if (durationMinutes < 10) { durationMinutes = "0" + durationMinutes; }
+
+      currentTime.textContent = currentMinutes + ":" + currentSeconds;
+      duration.textContent = durationMinutes + ":" + durationSeconds;
+    }
+}
+
+//DRAG AND DROP
 
 function dragOverHandler(ev) {
     ev.preventDefault();
@@ -125,8 +254,6 @@ function dropHandler(ev) {
 
         if (item.kind === "file" && item.type === "audio/mpeg") {
           const file = item.getAsFile();
-          songs.push(file);
-          console.log(songs);
             
           const reader = new FileReader();
 
@@ -147,6 +274,7 @@ function dropHandler(ev) {
                   artist = getStringFromDataView(dv, tagPosition + 33, 30) || artist;
                   
               }
+              console.log(title);
 
                 const audio = new Audio();
 
@@ -156,12 +284,11 @@ function dropHandler(ev) {
                     const minutes = Math.floor(audio.duration / 60);
                     const seconds = Math.floor(audio.duration % 60);
                     let duration = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            
-                    URL.revokeObjectURL(objectURL);
 
                     let row = songsTable.insertRow(-1);
                     var headerCell = document.createElement("TH");
-                    headerCell.innerHTML = songs.length;
+                    headerCell.innerHTML = songs.length + 1;
+                    headerCell.setAttribute('scope', 'row');
                     row.appendChild(headerCell);
           
                     let titleCell = row.insertCell(-1);
@@ -173,8 +300,18 @@ function dropHandler(ev) {
                       let durationCell = row.insertCell(-1);
                       durationCell.innerHTML = duration;
 
-                      console.log(songsTable);
-
+                      row.onclick = (ev) => {
+                        ev.preventDefault();
+                        if(selectedSong !== null){
+                            let index = songs.indexOf(selectedSong);
+                            songsTable.rows.item(index + 2).setAttribute('class', 'table-dark');
+                        }
+                        selectedSong = songs[row.cells[0].innerHTML - 1];
+                        row.setAttribute('class', 'table-secondary');
+                        console.log(selectedSong);
+                      }
+                     
+                    songs.push(new Song(file, objectURL, title, artist));
                 };
 
           };
