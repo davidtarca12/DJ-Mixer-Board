@@ -38,7 +38,6 @@ window.onload = () => {
     const leftImg = new Image(), rightImg = new Image();
 
     const audioContext = new AudioContext();
-
     const trackLeft = audioContext.createMediaElementSource(audioPlayerLeft);
     const leftGainNode = audioContext.createGain();
 
@@ -64,6 +63,7 @@ window.onload = () => {
         }
         else {
             if (audioPlayer.src !== defaultAudioPlayerSrc) {
+                audioContext.resume();
                 audioPlayer.play();
                 if(audioPlayer === audioPlayerLeft)
                     animate(leftContext, leftImg, leftAngle, leftCanvas, !isPlayingBool);
