@@ -410,4 +410,46 @@ window.onload = () => {
             console.log(`Playback Rate: ${playbackRate.toFixed(2)}`);
     }
 
+
+   
+    const leftFilter = audioContext.createBiquadFilter();
+    const rightFilter = audioContext.createBiquadFilter();
+
+    leftFilter.type = 'lowpass';
+    rightFilter.type = 'lowpass';
+    leftFilter.frequency.value = 0;
+    rightFilter.frequency.value = 0;
+
+    trackLeft.connect(leftFilter).connect(audioContext.destination);
+    trackLeft.connect(rightFilter).connect(audioContext.destination);
+
+    filterKnobLeft.addEventListener('wheel', (e) => {
+        filterChanger(e,filterKnobLeft, leftFilter);
+    })
+
+    filterKnobRight.addEventListener('wheel', (e) => {
+        filterChanger(e,filterKnobRight, rightFilter);
+    })
+
+
+    function filterChanger(e, knob, filter) {
+        e.preventDefault();
+    
+        let direction = e.deltaY > 0 ? -1 : 1;
+    
+        const scalingFactor = 20; 
+    
+        currentAngle += direction * scalingFactor;
+        currentAngle = Math.max(Math.min(currentAngle, 160), -160);
+        knob.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
+    
+        const minFreq = 20; 
+        const maxFreq = 20000; 
+    
+        const frequency = minFreq * Math.pow(maxFreq / minFreq, (currentAngle + 160) / 320);
+        filter.frequency.value = frequency;
+    
+        console.log(`Filter Frequency: ${frequency.toFixed(2)} Hz`);
+    }
+
 }
