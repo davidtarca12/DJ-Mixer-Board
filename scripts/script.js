@@ -30,7 +30,9 @@ window.onload = () => {
         leftSongNameWrapper, rightSongNameWrapper,
         dropZone,
         crossfader,
-        leftVolume, rightVolume;
+        leftVolume, rightVolume,
+        filterKnobLeft, filterKnobRight,
+        pitchKnobLeft, pitchKnobRight;
 
     initComponents();
 
@@ -316,6 +318,11 @@ window.onload = () => {
         leftVolume = document.getElementById('left-volume');
         rightVolume = document.getElementById('right-volume');
 
+        filterKnobLeft = document.getElementById('filter-knob-left');
+        pitchKnobLeft = document.getElementById('pitch-knob-left');
+        filterKnobRight = document.getElementById('filter-knob-right');
+        pitchKnobRight = document.getElementById('pitch-knob-right');
+
     }
 
     function drawDiscs() {
@@ -370,15 +377,24 @@ window.onload = () => {
 
     }
 
-    let knobs = document.querySelectorAll('.knob-left, .knob-right');
 
-    knobs.forEach(knob => {
-        let currentAngle = 0;
 
-        knob.addEventListener('wheel', (e) => {
-            e.preventDefault();
+    let currentAngle = 0;
+    audioPlayerLeft.preservePitch = true;
+    audioPlayerRight.preservePitch = true;
 
-            let direction = e.deltaY > 0 ? 1 : -1;
+    pitchKnobLeft.addEventListener('wheel', (e) => {
+        pitchChanger(e,audioPlayerLeft, pitchKnobLeft);
+    })
+
+    pitchKnobRight.addEventListener('wheel', (e) => {
+        pitchChanger(e,audioPlayerRight, pitchKnobRight);
+    })
+
+    function pitchChanger(e,audioPlayer, knob){
+        e.preventDefault();
+
+            let direction = e.deltaY > 0 ? -1 : 1;
 
             const scalingFactor = 20;
 
@@ -386,7 +402,12 @@ window.onload = () => {
 
             currentAngle = Math.max(Math.min(currentAngle, 160), -160);
             knob.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
-        });
-    });
+
+            const minRate = 0.5, maxRate = 2.0;
+            const rateRange = maxRate - minRate;
+            const playbackRate = minRate * Math.pow(maxRate / minRate, (currentAngle + 160) / 320);
+            audioPlayer.playbackRate = playbackRate;
+            console.log(`Playback Rate: ${playbackRate.toFixed(2)}`);
+    }
 
 }
