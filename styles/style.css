@@ -1,97 +1,74 @@
+/* =========================================
+   1. PAGE AND NAVBAR
+========================================= */
+
 body {
     overflow: hidden;
+    background-color: #313338;
 }
 
-.knob-left,
-.knob-right {
-    background: linear-gradient(0deg, #525252 0%, #373737 100%);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%) rotate(0deg);
-    transition: transform 0.2s ease-in-out;
+.navbar {
+    background-color: #9d3b3b;
 }
 
-.knob-slider::before {
-    background: linear-gradient(0deg, #525252 0%, #373737 100%);
-    width: 30px;
-    height: 30px;
-    box-shadow: 0px -1px 10px #757575,
-        0px 1px 35px #111111,
-        inset 0px 3px 3px #979797,
-        inset 0px -3px 3px #242424;
-}
 
-.knob-slider::before,
-.knob-left,
-.knob-right {
-    width: 30px;
-    height: 30px;
-    position: absolute;
+/* =========================================
+   2. MAIN CONSOLE LAYOUT
+========================================= */
 
-    transform: translate(-50%, -50%);
-}
-
-.knob-left::before,
-.knob-left::after,
-.knob-slider::before,
-.knob-right::before,
-.knob-right::after {
-    content: '';
-    border-radius: 50%;
-    position: absolute;
-}
-
-.knob-left::before,
-.knob-right::before {
-    top: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    background: #ffffff;
-    box-shadow: 0px 0px 1px #ab0405;
-
-}
-
-.knob-slider {
-    width: 10vw;
-    height: 10vh;
+.console-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding-left: 15%;
-    padding-top: 10%;
 }
 
-.knob-left::after {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid #ab0405;
-    width: 130%;
-    height: 130%;
-    box-shadow: 0px 0px 5px #ab0405,
-        inset 0px 0px 10px #ab0405;
+.console {
+    width: auto;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
 }
 
-.knob-right::after {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid #0020a8;
-    width: 130%;
-    height: 130%;
-    box-shadow: 0px 0px 5px #0020a8,
-        inset 0px 0px 10px #0020a8;
+.left-channel,
+.right-channel,
+.center-channel {
+    height: 60vh;
+    border-top: 3px solid #9d3b3b;
+    border-bottom: 3px solid #9d3b3b;
+    width: auto;
 }
+
+.left-channel {
+    border-right: 3px solid #9d3b3b;
+}
+
+.right-channel {
+    border-left: 3px solid #9d3b3b;
+}
+
+.left-channel,
+.right-channel {
+    width: 35vw;
+}
+
+.center-channel {
+    width: 20vw;
+}
+
+
+/* =========================================
+   3. TURNTABLES / DISCS
+========================================= */
 
 #left-disc-container,
 #right-disc-container {
+    width: 35vw;
     height: 40vh;
-    width: 40vw;
 }
+
+
+/* =========================================
+   4. SONG NAMES
+========================================= */
 
 #left-song-name-wrapper,
 #right-song-name-wrapper {
@@ -102,6 +79,30 @@ body {
     margin-bottom: 3%;
 }
 
+
+/* =========================================
+   5. TRACK CONTROL BUTTONS
+========================================= */
+
+.btn-group {
+    background-color: rgb(74, 74, 74);
+    display: flex;
+    width: 20vw;
+    height: auto;
+    margin: auto;
+    margin-top: -2%;
+}
+
+#upload-right,
+#upload-left {
+    padding-right: 30px;
+}
+
+
+/* =========================================
+   6. AUDIO SEEK BARS
+========================================= */
+
 #left-seekbar-container,
 #right-seekbar-container {
     width: 15.6vw;
@@ -110,8 +111,8 @@ body {
     margin: auto;
 }
 
-#seekbar-right,
-#seekbar-left {
+#seekbar-left,
+#seekbar-right {
     -webkit-appearance: none;
     appearance: none;
     width: 15.6vw;
@@ -127,6 +128,8 @@ body {
     background: #0020a8;
 }
 
+/* Seek bar thumbs */
+
 #seekbar-left::-webkit-slider-thumb,
 #seekbar-right::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -138,10 +141,7 @@ body {
     cursor: pointer;
 }
 
-.time-duration-container {
-    margin-top: 7%;
-    color: white;
-}
+/* Audio time and duration */
 
 #audio-controls-left,
 #audio-controls-right {
@@ -152,68 +152,15 @@ body {
     height: 7vh;
 }
 
-.table-wrapper {
-    max-height: 33vh;
-    width: 100%;
-    overflow: auto;
-    display: inline-block;
+.time-duration-container {
+    margin-top: 7%;
+    color: white;
 }
 
-#drop-zone {
-    width: 100%;
-    height: 32vh;
-}
 
-#upload-right,
-#upload-left {
-    padding-right: 30px;
-}
-
-.center-channel {
-    width: 20vw;
-}
-
-.left-channel,
-.right-channel {
-    width: 40vw;
-}
-
-.btn-group {
-    background-color: rgb(74, 74, 74);
-    display: flex;
-    width: 20vw;
-    height: auto;
-    margin: auto;
-    margin-top: -2%;
-}
-
-body {
-    background-color: #313338;
-}
-
-.navbar {
-    background-color: #9d3b3b;
-}
-
-.console-container {
-    justify-content: center;
-    display: flex;
-}
-
-.console {
-    width: auto;
-    height: 60vh;
-    display: flex;
-    justify-content: center;
-}
-
-.left-channel,
-.right-channel,
-.center-channel {
-    height: 60vh;
-    border: 3px solid #9d3b3b;
-    width: auto;
-}
+/* =========================================
+   7. CENTER CHANNEL: KNOB LAYOUT
+========================================= */
 
 #knobs-wrapper {
     width: 20vw;
@@ -221,42 +168,130 @@ body {
     display: flex;
 }
 
+.knob-slider {
+    width: 10vw;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 15%;
+    padding-top: 10%;
+}
+
+
+/* =========================================
+   8. KNOB APPEARANCE
+========================================= */
+
+/* Main left and right knobs */
+
+.knob-left,
+.knob-right {
+    background: linear-gradient(0deg, #525252 0%, #373737 100%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(-160deg);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Shared positioning for knob elements */
+
+.knob-slider::before,
+.knob-left,
+.knob-right {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(-160deg);
+}
+
+/* Knob backgrounds and pseudo-elements */
+
+.knob-slider::before {
+    background: linear-gradient(0deg, #525252 0%, #373737 100%);
+    box-shadow:
+        0px -1px 10px #757575,
+        0px 1px 35px #111111,
+        inset 0px 3px 3px #979797,
+        inset 0px -3px 3px #242424;
+}
+
+.knob-left::before,
+.knob-left::after,
+.knob-slider::before,
+.knob-right::before,
+.knob-right::after {
+    content: '';
+    border-radius: 50%;
+    position: absolute;
+}
+
+/* Small white indicator on each knob */
+
+.knob-left::before,
+.knob-right::before {
+    top: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    background: #ffffff;
+    box-shadow: 0px 0px 1px #ab0405;
+}
+
+/* Red outline for left knobs */
+
+.knob-left::after {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #ab0405;
+    width: 130%;
+    height: 130%;
+    box-shadow:
+        0px 0px 5px #ab0405,
+        inset 0px 0px 10px #ab0405;
+}
+
+/* Blue outline for right knobs */
+
+.knob-right::after {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #0020a8;
+    width: 130%;
+    height: 130%;
+    box-shadow:
+        0px 0px 5px #0020a8,
+        inset 0px 0px 10px #0020a8;
+}
+
+
+
+/* 9. VOLUME CONTROLS */
 #volume-controls {
-    height: 25vh;
     width: 20vw;
+    height: 25vh;
     display: flex;
     flex-direction: row;
 }
 
 .slider-wrapper {
-    height: 25vh;
     width: 10vw;
+    height: 25vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#crossfader-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: end;
-    width: 20vw;
-    height: 15vh;
-}
-
-#crossfader-container {
-    background: linear-gradient(90deg, #ab0405 50%, #0020a8 50%);
-    margin-bottom: 10%;
-}
-
-#left-volume::-webkit-slider-thumb,
-#right-volume::-webkit-slider-thumb,
-#left-volume::-moz-range-thumb,
-#right-volume::-moz-range-thumb {
-    width: 14px;
-    height: 45px;
-    background-repeat: repeat;
-    transform: translate(0, -7px);
+#left-volume-container,
+#right-volume-container {
+    width: 8vw;
+    height: 2vh;
+    rotate: 90deg;
 }
 
 #left-volume-container {
@@ -267,56 +302,192 @@ body {
     background: #0020a8;
 }
 
-#left-volume-container,
-#right-volume-container {
-    rotate: 90deg;
-    width: 8vw;
-    height: 1.5vh;
-
+/* 10. CROSS-FADER */
+#crossfader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20vw;
+    height: 15vh;
 }
 
+#crossfader-container {
+    background: linear-gradient(90deg, #ab0405 50%, #0020a8 50%);
+}
+
+
+/* 11. PITCH FADERS */
+.pitch-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 5vw;
+    height: 60vh;            /* 10vh margin + 40vh track + 10vh button zone */
+    border-top: 3px solid #9d3b3b;
+    border-bottom: 3px solid #9d3b3b;
+}
+
+.pitch-control .pitch-track {
+    position: relative;
+    flex: none;
+    width: 2vh;
+    height: 40vh;            /* real height, so it sits in the flow */
+    margin: 10vh 0 0 0;      /* 10vh space above */
+    background: linear-gradient(to bottom, #282828 50%, #191919 50%);
+}
+
+/* The input is laid out horizontally at the track's length, then rotated into place */
+.pitch-track .slider {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40vh;             /* becomes the visual height after rotation */
+    height: 70px;
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.pitch-control .pitch-btn-zone {
+    flex: none;
+    width: 100%;
+    height: 10vh;
+    margin-top: auto;        /* pins the zone to the bottom of the column */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pitch-btn {
+    width: 3vh;
+    height: 3vh;             /* equal values = square */
+    padding: 0;
+    border: 1px solid #282828;
+    border-radius: 0;        /* Bootstrap rounds buttons by default */
+    background-color: #191919;
+    box-shadow: none;
+}
+
+.pitch-btn:hover {
+    background-color: #666;
+    border-color: #777;
+}
+
+.pitch-btn:active {
+    background-color: #333;
+}
+
+.pitch-btn:focus-visible {
+    box-shadow: 0 0 0 2px rgba(157, 59, 59, 0.6);
+}
+
+/* 12. SHARED SLIDER CONTAINER */
 .slider-container {
     width: 16vw;
     height: 2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* 13. SHARED SLIDER INPUT */
 .slider {
     -webkit-appearance: none;
     appearance: none;
-    width: 16vw;
+    display: block;
+    width: 100%;
+    height: 70px;
+    margin: 0;
+    padding: 0;
+    border: 0;
     background: transparent;
-    cursor: ew-resize;
+    cursor: pointer;
 }
 
+/* Volume slider widths */
 #left-volume,
 #right-volume {
     width: 8vw;
 }
 
+/* 14. SLIDER THUMB — CHROME, EDGE, SAFARI */
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
     height: 70px;
-    background: url('/assets/buttons/CrossfaderKnob.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+    margin: 0;
+    border: 0;
+    background: url('/assets/buttons/CrossfaderKnob.png')
+        center / contain no-repeat;
     cursor: pointer;
-
-    position: relative;
-    transform: translate(0, -25px);
 }
 
+/* SLIDER THUMB — FIREFOX */
 .slider::-moz-range-thumb {
-    -webkit-appearance: none;
-    appearance: none;
     width: 25px;
     height: 70px;
-    background: url('/assets/buttons/CrossfaderKnob.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: url('/assets/buttons/CrossfaderKnob.png')
+        center / contain no-repeat;
     cursor: pointer;
+}
 
-    position: relative;
-    transform: translate(0, -25px);
+/* SMALLER VOLUME AND PITCH THUMBS — CHROME, EDGE, SAFARI */
+#left-volume::-webkit-slider-thumb,
+#right-volume::-webkit-slider-thumb,
+#left-pitch-fader::-webkit-slider-thumb,
+#right-pitch-fader::-webkit-slider-thumb {
+    width: 14px;
+    height: 45px;
+}
+
+/* SMALLER VOLUME AND PITCH THUMBS — FIREFOX */
+#left-volume::-moz-range-thumb,
+#right-volume::-moz-range-thumb,
+#left-pitch-fader::-moz-range-thumb,
+#right-pitch-fader::-moz-range-thumb {
+    width: 14px;
+    height: 45px;
+}
+
+
+
+/* =========================================
+   15. SONG TABLE / DROP ZONE
+========================================= */
+
+#drop-zone {
+    width: 100%;
+    height: 32vh;
+}
+
+.table-wrapper {
+    display: inline-block;
+    width: 100%;
+    max-height: 33vh;
+    overflow: auto;
+}
+
+.modal-btn-demo {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: rgb(74, 74, 74);   /* same as .btn-group */
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+#info-modal .modal-content {
+    color: #fff;
+}
+
+#info-modal .modal-title,
+#info-modal .modal-body {
+    color: #fff;
+}
+
+#got-it-btn {
+    background-color: #4a4a4a;
+    border-color: #4a4a4a;
 }

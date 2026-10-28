@@ -31,14 +31,16 @@ window.onload = () => {
         dropZone,
         crossfader,
         leftVolume, rightVolume,
-        filterKnobLeft, filterKnobRight,
-        pitchKnobLeft, pitchKnobRight;
+        lowpassFilterKnobLeft, lowpassFilterKnobRight,
+        highpassFilterKnobLeft, highpassFilterKnobRight,
+        leftPitchFader, rightPitchFader,
+        leftResetPitchBtn, rightResetPitchBtn
 
     initComponents();
 
     let leftIsPlaying = false, rightIsPlaying = false;
     let leftAngle = 0, rightAngle = 0;
-    let targetSize = window.innerWidth * 0.2;
+    let targetSize = window.innerWidth * 0.175;
     const leftImg = new Image(), rightImg = new Image();
 
     const audioContext = new AudioContext();
@@ -47,9 +49,6 @@ window.onload = () => {
 
     const trackRight = audioContext.createMediaElementSource(audioPlayerRight);
     const rightGainNode = audioContext.createGain();
-
-    trackLeft.connect(leftGainNode).connect(audioContext.destination);
-    trackRight.connect(rightGainNode).connect(audioContext.destination);
 
     drawDiscs();
 
@@ -110,6 +109,9 @@ window.onload = () => {
     let substractFromLeft = 0, substractFromRight = 0;
     let leftCrossValue = 1, rightCrossValue = 1;
 
+    console.log(leftGainNode.gain.value);
+    console.log(rightGainNode.gain.value);
+
     crossfader.addEventListener("input", () => {
         leftCrossValue = ((2 - crossfader.value / 50) <= 1) ? (2 - crossfader.value / 50) : 1
         rightCrossValue = (crossfader.value / 50 <= 1) ? (crossfader.value / 50) : 1;
@@ -120,6 +122,9 @@ window.onload = () => {
     leftVolume.addEventListener("input", () => {
         substractFromLeft = leftVolume.value / 100;
         leftGainNode.gain.value = (leftCrossValue - substractFromLeft) > 0 ? leftCrossValue - substractFromLeft : 0;
+
+        console.log(substractFromLeft);
+        console.log(leftGainNode.gain.value);
     })
 
     rightVolume.addEventListener("input", () => {
@@ -318,10 +323,16 @@ window.onload = () => {
         leftVolume = document.getElementById('left-volume');
         rightVolume = document.getElementById('right-volume');
 
-        filterKnobLeft = document.getElementById('filter-knob-left');
-        pitchKnobLeft = document.getElementById('pitch-knob-left');
-        filterKnobRight = document.getElementById('filter-knob-right');
-        pitchKnobRight = document.getElementById('pitch-knob-right');
+        leftPitchFader = document.getElementById('left-pitch-fader');
+        rightPitchFader = document.getElementById('right-pitch-fader');
+
+        leftResetPitchBtn = document.getElementById('left-reset-pitch-btn');
+        rightResetPitchBtn = document.getElementById('right-reset-pitch-btn');
+
+        lowpassFilterKnobLeft = document.getElementById('lowpass-filter-knob-left');
+        highpassFilterKnobLeft = document.getElementById('highpass-filter-knob-left');
+        lowpassFilterKnobRight = document.getElementById('lowpass-filter-knob-right');
+        highpassFilterKnobRight = document.getElementById('highpass-filter-knob-right');
 
     }
 
@@ -330,8 +341,8 @@ window.onload = () => {
         leftImg.src = "assets/images/channel-red.png";
         rightImg.src = "assets/images/channel-blue.png";
 
-        leftCanvas.height = rightCanvas.height = window.innerHeight * 0.4;
-        leftCanvas.width = rightCanvas.width = window.innerWidth * 0.4;
+        leftCanvas.height = rightCanvas.height = window.innerHeight * 0.35;
+        leftCanvas.width = rightCanvas.width = window.innerWidth * 0.35;
 
         leftImg.onload = () => {
             animate(leftContext, leftImg, leftAngle, leftCanvas, leftIsPlaying);
@@ -377,79 +388,125 @@ window.onload = () => {
 
     }
 
+    const knobAngles = {
+        leftLowpass: -160,
+        leftHighpass: -160,
+        rightLowpass: -160,
+        rightHighpass: -160
+    }
 
-
-    let currentAngle = 0;
     audioPlayerLeft.preservePitch = true;
     audioPlayerRight.preservePitch = true;
 
-    pitchKnobLeft.addEventListener('wheel', (e) => {
-        pitchChanger(e,audioPlayerLeft, pitchKnobLeft);
+    function pitchChanger(slider, audioPlayer) {
+        const minRate = 0.92, maxRate = 1.08;
+        const t = 1 - slider.value / 100;   // invert: 0 -> 1, 100 -> 0
+        const playbackRate = minRate * Math.pow(maxRate / minRate, t);
+    
+        audioPlayer.playbackRate = playbackRate;
+        console.log(`Playback Rate: ${playbackRate.toFixed(2)}`);
+    }
+   
+    const leftLowpassFilter = audioContext.createBiquadFilter();
+    const rightLowpassFilter = audioContext.createBiquadFilter();
+
+    const leftHighpassFilter = audioContext.createBiquadFilter();
+    const rightHighpassFilter = audioContext.createBiquadFilter();
+
+    leftLowpassFilter.type = 'lowpass';
+    rightLowpassFilter.type = 'lowpass';
+
+    leftHighpassFilter.type = 'highpass';
+    rightHighpassFilter.type = 'highpass';
+
+    leftLowpassFilter.frequency.value = 20_000;
+    rightLowpassFilter.frequency.value = 20_000;
+
+    leftHighpassFilter.frequency.value = 20;
+    rightHighpassFilter.frequency.value = 20;
+
+    trackLeft.connect(leftGainNode)
+    .connect(leftLowpassFilter)
+    .connect(leftHighpassFilter)
+    .connect(audioContext.destination);
+
+    trackRight.connect(rightGainNode)
+    .connect(rightLowpassFilter)
+    .connect(rightHighpassFilter)
+    .connect(audioContext.destination);
+
+    lowpassFilterKnobLeft.addEventListener('wheel', (e) => {
+        filterChanger(e, lowpassFilterKnobLeft, leftLowpassFilter, 'leftLowpass');
     })
 
-    pitchKnobRight.addEventListener('wheel', (e) => {
-        pitchChanger(e,audioPlayerRight, pitchKnobRight);
+    lowpassFilterKnobRight.addEventListener('wheel', (e) => {
+        filterChanger(e, lowpassFilterKnobRight, rightLowpassFilter, 'rightLowpass');
     })
 
-    function pitchChanger(e,audioPlayer, knob){
-        e.preventDefault();
+    highpassFilterKnobLeft.addEventListener('wheel', (e) => {
+        filterChanger(e, highpassFilterKnobLeft, leftHighpassFilter, 'leftHighpass');
+    });
 
-            let direction = e.deltaY > 0 ? -1 : 1;
+    highpassFilterKnobRight.addEventListener('wheel', (e) => {
+        filterChanger(e, highpassFilterKnobRight, rightHighpassFilter, 'rightHighpass');
+    });
 
-            const scalingFactor = 20;
+    leftResetPitchBtn.addEventListener('click', () => {
+        resetPitchFader(leftPitchFader, audioPlayerLeft);
+    })
 
-            currentAngle += direction * scalingFactor;
+    rightResetPitchBtn.addEventListener('click', () => {
+        resetPitchFader(rightPitchFader, audioPlayerRight);
+    })
 
-            currentAngle = Math.max(Math.min(currentAngle, 160), -160);
-            knob.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
+    leftPitchFader.addEventListener('input', () => {
+        pitchChanger(leftPitchFader, audioPlayerLeft);
+    })
 
-            const minRate = 0.5, maxRate = 2.0;
-            const rateRange = maxRate - minRate;
-            const playbackRate = minRate * Math.pow(maxRate / minRate, (currentAngle + 160) / 320);
-            audioPlayer.playbackRate = playbackRate;
-            console.log(`Playback Rate: ${playbackRate.toFixed(2)}`);
+    rightPitchFader.addEventListener('input', () => {
+        pitchChanger(rightPitchFader, audioPlayerRight);
+    })
+
+    function resetPitchFader(pitchFader, audioPlayer) {
+        pitchFader.value = 50;
+        pitchChanger(pitchFader, audioPlayer)
     }
 
-
-   
-    const leftFilter = audioContext.createBiquadFilter();
-    const rightFilter = audioContext.createBiquadFilter();
-
-    leftFilter.type = 'lowpass';
-    rightFilter.type = 'lowpass';
-    leftFilter.frequency.value = 0;
-    rightFilter.frequency.value = 0;
-
-    trackLeft.connect(leftFilter).connect(audioContext.destination);
-    trackLeft.connect(rightFilter).connect(audioContext.destination);
-
-    filterKnobLeft.addEventListener('wheel', (e) => {
-        filterChanger(e,filterKnobLeft, leftFilter);
-    })
-
-    filterKnobRight.addEventListener('wheel', (e) => {
-        filterChanger(e,filterKnobRight, rightFilter);
-    })
-
-
-    function filterChanger(e, knob, filter) {
+    function filterChanger(e, knob, filter, knobAngleProp) {
         e.preventDefault();
     
         let direction = e.deltaY > 0 ? -1 : 1;
     
-        const scalingFactor = 20; 
+        const scalingFactor = 20;
+        
+        let angle = knobAngles[knobAngleProp];
     
-        currentAngle += direction * scalingFactor;
-        currentAngle = Math.max(Math.min(currentAngle, 160), -160);
-        knob.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
+        angle += direction * scalingFactor;
+        angle = Math.max(Math.min(angle, 160), -160);
+        knob.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
     
-        const minFreq = 20; 
-        const maxFreq = 20000; 
+        const minFreq = (filter === leftLowpassFilter || filter === rightLowpassFilter) ? 100 : 20; 
+        const maxFreq = (filter === leftLowpassFilter || filter === rightLowpassFilter) ? 20_000 : 5_000; 
+
+        const normalizedAngle = ((filter === leftLowpassFilter || filter === rightLowpassFilter) ? 160 - angle : 160 + angle) / 320;
     
-        const frequency = minFreq * Math.pow(maxFreq / minFreq, (currentAngle + 160) / 320);
+        const frequency = minFreq * Math.pow(maxFreq / minFreq, normalizedAngle);
         filter.frequency.value = frequency;
     
         console.log(`Filter Frequency: ${frequency.toFixed(2)} Hz`);
+
+        knobAngles[knobAngleProp] = angle;
     }
 
+    window.addEventListener('resize', () => {
+        drawDiscs();
+    });
+
+    function showInfoPopup() {
+        const modalEl = document.getElementById('info-modal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+    }
+    
+    showInfoPopup();
 }

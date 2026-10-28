@@ -28,8 +28,21 @@
     </div>
   </nav>
 
+  <div id="initial-popup">
+
+  </div>
+
   <div class="console-container">
     <div class="console">
+      <div class="pitch-control">
+        <div class="slider-container pitch-track">
+          <input class="slider" id="left-pitch-fader" type="range" min="0" max="100" value="50" step="1" autocomplete="off">
+        </div>
+        <div class="pitch-btn-zone">
+          <button type="button" class="btn btn-secondary pitch-btn" id="left-reset-pitch-btn" aria-label="Left pitch button"></button>
+        </div>
+      </div>
+
       <div class="left-channel">
         <canvas id="left-disc-container">
         </canvas>
@@ -55,7 +68,7 @@
         </div>
         <div id="audio-controls-left">
           <div id="left-seekbar-container">
-            <input id="seekbar-left" type="range" min="0" max="100" value="0" step="1">
+            <input id="seekbar-left" type="range" min="0" max="100" value="0" step="1" autocomplete="off">
           </div>
           <div class="time-duration-container">
             <span id="current-time-left">0:00</span> / <span id="duration-left">0:00</span>
@@ -65,37 +78,37 @@
       <div class="center-channel" id="center">
         <div id="knobs-wrapper">
           <div class="knobs-row">
-            <div class="knob-slider" id="filter-left">
-              <div id="filter-knob-left" class="knob-left"></div>
+            <div class="knob-slider" id="lowpass-filter-left">
+              <div id="lowpass-filter-knob-left" class="knob-left"></div>
             </div>
-            <div class="knob-slider" id="pitch-left">
-              <div id="pitch-knob-left" class="knob-left"></div>
+            <div class="knob-slider" id="highpass-filter-left">
+              <div id="highpass-filter-knob-left" class="knob-left"></div>
             </div>
           </div>
           <div class="knobs-row">
-            <div class="knob-slider" id="filter-right">
-              <div id="filter-knob-right" class="knob-right"></div>
+            <div class="knob-slider" id="lowpass-filter-right">
+              <div id="lowpass-filter-knob-right" class="knob-right"></div>
             </div>
-            <div class="knob-slider" id="pitch-right">
-              <div id="pitch-knob-right" class="knob-right"></div>
+            <div class="knob-slider" id="highpass-filter-right">
+              <div id="highpass-filter-knob-right" class="knob-right"></div>
             </div>
           </div>
         </div>
         <div id="volume-controls">
           <div class="slider-wrapper">
             <div id="left-volume-container" class="slider-container">
-              <input class="slider" id="left-volume" type="range" min="0" max="100" value="0" step="1">
+              <input class="slider" id="left-volume" type="range" min="0" max="100" value="0" step="1" autocomplete="off">
             </div>
           </div>
           <div class="slider-wrapper">
             <div id="right-volume-container" class="slider-container">
-              <input class="slider" id="right-volume" type="range" min="0" max="100" value="0" step="1">
+              <input class="slider" id="right-volume" type="range" min="0" max="100" value="0" step="1" autocomplete="off">
             </div>
           </div>
         </div>
         <div id="crossfader-wrapper">
           <div id="crossfader-container" class="slider-container">
-            <input class="slider" id="crossfader" type="range" min="0" max="100" value="50" step="1">
+            <input class="slider" id="crossfader" type="range" min="0" max="100" value="50" step="1" autocomplete="off">
           </div>
         </div>
       </div>
@@ -125,11 +138,20 @@
         </div>
         <div id="audio-controls-right">
           <div id="right-seekbar-container">
-            <input id="seekbar-right" type="range" min="0" max="100" value="0" step="1">
+            <input id="seekbar-right" type="range" min="0" max="100" value="0" step="1" autocomplete="off">
           </div>
           <div class="time-duration-container">
             <span id="current-time-right">0:00</span> / <span id="duration-right">0:00</span>
           </div>
+        </div>
+      </div>
+
+      <div class="pitch-control">
+        <div class="slider-container pitch-track">
+          <input class="slider" id="right-pitch-fader" type="range" min="0" max="100" value="50" step="1" autocomplete="off">
+        </div>
+        <div class="pitch-btn-zone">
+          <button type="button" class="btn btn-secondary pitch-btn" id="right-reset-pitch-btn" aria-label="Right pitch button"></button>
         </div>
       </div>
 
@@ -156,6 +178,29 @@
     </div>
   </div>
 
-</body>
+  <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="info-modal-title" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="info-modal-title">How to load tracks</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ol class="mb-0">
+            <li class="mb-2">Only <strong>.mp3</strong> files are allowed.</li>
+            <li class="mb-2">Drop your files in the song list <strong>under the DJ console</strong>.</li>
+            <li>Load a song onto a deck with that deck's upload button  
+              <span class="modal-btn-demo"><img src="assets/buttons/arrowUp.png" width="16" height="16" alt="Upload button"></span>
+              (left or right).
+            </li>
+          </ol>
+        </div>
+        <div class="modal-footer">
+          <button id="got-it-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Got it</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+</body>
 </html>
