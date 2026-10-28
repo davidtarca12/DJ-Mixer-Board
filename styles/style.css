@@ -333,7 +333,7 @@ body {
     width: 2vh;
     height: 40vh;            /* real height, so it sits in the flow */
     margin: 10vh 0 0 0;      /* 10vh space above */
-    background: linear-gradient(to bottom, #282828 50%, #191919 50%);
+    background: linear-gradient(to bottom, #262626 50%, #161616 50%);
 }
 
 /* The input is laid out horizontally at the track's length, then rotated into place */
@@ -362,13 +362,13 @@ body {
     padding: 0;
     border: 1px solid #282828;
     border-radius: 0;        /* Bootstrap rounds buttons by default */
-    background-color: #191919;
+    background-color: #161616;
     box-shadow: none;
 }
 
 .pitch-btn:hover {
-    background-color: #666;
-    border-color: #777;
+    background-color: #262626;
+    border-color: #262626;
 }
 
 .pitch-btn:active {
@@ -474,7 +474,7 @@ body {
 .modal-btn-demo {
     display: inline-block;
     padding: 4px 8px;
-    background-color: rgb(74, 74, 74);   /* same as .btn-group */
+    background-color: rgb(74, 74, 74);   
     border-radius: 4px;
     vertical-align: middle;
 }
@@ -503,4 +503,10 @@ body {
     --bs-table-hover-bg: #161616;
     --bs-table-hover-color: white;
     --bs-table-color: white;
+}
+
+.btn-group .btn {
+    --bs-btn-bg: #262626;                       /* normal */
+    --bs-btn-hover-bg: #161616;                 /* hover */
+    --bs-btn-border-color: black;
 }
