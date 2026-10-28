@@ -85,7 +85,6 @@ body {
 ========================================= */
 
 .btn-group {
-    background-color: rgb(74, 74, 74);
     display: flex;
     width: 20vw;
     height: auto;
@@ -474,13 +473,14 @@ body {
 .modal-btn-demo {
     display: inline-block;
     padding: 4px 8px;
-    background-color: rgb(74, 74, 74);   
+    background-color: #262626;   
     border-radius: 4px;
     vertical-align: middle;
 }
 
 #info-modal .modal-content {
     color: #fff;
+    background-color: #333333;
 }
 
 #info-modal .modal-title,
@@ -489,8 +489,8 @@ body {
 }
 
 #got-it-btn {
-    background-color: #4a4a4a;
-    border-color: #4a4a4a;
+    background-color: #262626;
+    border-color: #262626;
 }
 
 #songs-table {
