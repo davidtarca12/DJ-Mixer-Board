@@ -4,11 +4,11 @@
 
 body {
     overflow: hidden;
-    background-color: #313338;
+    background-color: #333333;
 }
 
 .navbar {
-    background-color: #9d3b3b;
+    background-color: #6D2525;
 }
 
 
@@ -32,17 +32,17 @@ body {
 .right-channel,
 .center-channel {
     height: 60vh;
-    border-top: 3px solid #9d3b3b;
-    border-bottom: 3px solid #9d3b3b;
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
     width: auto;
 }
 
 .left-channel {
-    border-right: 3px solid #9d3b3b;
+    border-right: 3px solid black;
 }
 
 .right-channel {
-    border-left: 3px solid #9d3b3b;
+    border-left: 3px solid black;
 }
 
 .left-channel,
@@ -323,8 +323,8 @@ body {
     align-items: center;
     width: 5vw;
     height: 60vh;            /* 10vh margin + 40vh track + 10vh button zone */
-    border-top: 3px solid #9d3b3b;
-    border-bottom: 3px solid #9d3b3b;
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
 }
 
 .pitch-control .pitch-track {
@@ -461,6 +461,7 @@ body {
 #drop-zone {
     width: 100%;
     height: 32vh;
+    background-color: #262626;
 }
 
 .table-wrapper {
@@ -490,4 +491,16 @@ body {
 #got-it-btn {
     background-color: #4a4a4a;
     border-color: #4a4a4a;
+}
+
+#songs-table {
+    --bs-table-bg: #262626;                /* normal rows */
+    --bs-table-hover-bg: #161616;
+}
+
+#songs-table tr.table-secondary {
+    --bs-table-bg: #161616;                /* selected row */
+    --bs-table-hover-bg: #161616;
+    --bs-table-hover-color: white;
+    --bs-table-color: white;
 }

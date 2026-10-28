@@ -203,7 +203,7 @@ window.onload = () => {
                                 ev.preventDefault();
                                 if (selectedSong !== null) {
                                     let index = songs.indexOf(selectedSong);
-                                    songsTable.rows.item(index + 2).setAttribute('class', 'table-dark');
+                                    songsTable.rows.item(index + 2).classList.remove('table-secondary');
                                 }
                                 selectedSong = songs[row.cells[0].innerHTML - 1];
                                 row.setAttribute('class', 'table-secondary');
